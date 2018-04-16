@@ -13,4 +13,4 @@ main: main.cpp
 
 clean:
 	rm *.o
-rm $(OUTPUTNAME)
+	rm $(OUTPUTNAME)
