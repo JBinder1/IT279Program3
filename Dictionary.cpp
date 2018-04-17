@@ -4,7 +4,7 @@
 
 #include <queue>
 
-#define MIN_CAPACITY 11
+#define MIN_CAPACITY 19
 int capacity = MIN_CAPACITY;
 
 enum EntryType {Legitimate, Empty, Deleted};
@@ -23,15 +23,23 @@ struct HashTable{
 HashTable *htable;
 
 HashTable * initializeTable(int capacity){
-    if(capacity < MIN_CAPACITY)
+    if(htable != NULL)
+        delete htable;
+    if(capacity < MIN_CAPACITY){
+        cout<<"Table capacity too small.\n";
         return NULL;
+    }
     htable = new HashTable;
-    if(htable == NULL)
+    if(htable == NULL){
+        cout<<"Out of space.\n";
         return NULL;
+    }
     htable->capacity = capacity;
     htable->table = new HashNode[htable->capacity];
-    if(htable->table == NULL)
+    if(htable->table == NULL){
+        cout<<"Table capacity too small.\n";
         return NULL;
+    }
     for(int i = 0; i < htable->capacity; i++){
         htable->table[i].info = Empty;
         htable->table[i].data = "";
@@ -42,10 +50,6 @@ HashTable * initializeTable(int capacity){
 }
 
 Dictionary::Dictionary(){
-//    size = MIN_CAPACITY;    // size = size of hashTable array
-//    AVLTreeNode hashTable [size]; 
-//    root = hashTable;       // Pointer to first element of array.
-//                            // To access following elements use *(root + n)
     initializeTable(MIN_CAPACITY);
 }
 
@@ -68,7 +72,7 @@ unsigned int hashFunction(const string & key, int tableSize){
         hashVal = 37 * hashVal + ch;
     }
     unsigned int ans = hashVal % tableSize;
-    cout<<"hash function = "<<ans<<endl;
+    cout<<key<<" hash function = "<<ans<<endl;
     return ans;
 }
 
@@ -102,7 +106,7 @@ void Insert(string anEntry){
     while(!added){
         unsigned int temp = hashFunction(anEntry, htable->capacity);
         int pos = (temp + collisions * collisions) % htable->capacity;
-        cout<<"pos: "<<pos<<endl;
+        cout<<anEntry<<" placed at position "<<pos<<endl<<endl;
         if(htable->table[pos].info == Legitimate){
             collisions++;
         }else{
@@ -112,7 +116,7 @@ void Insert(string anEntry){
         }
     }
     htable->size = htable->size + 1;
-    cout<<"htable size increased to: "<<htable->size<<endl;
+    cout<<"# of elements in htable: "<<htable->size<<endl;
 }
 
 void Dictionary::AddEntry(string anEntry){
@@ -137,14 +141,10 @@ HashTable * Rehash(HashTable * htable){
     }
     free(table);
     return htable;
-    cout<<"Rehash finished. New table cap: "<<htable->capacity<<endl;
+    cout<<"Rehash finished. New table capacity: "<<htable->capacity<<endl;
 }
 
 bool Dictionary::FindEntry(string key){
-//    int pos = hash(key, htable->capacity);
-//    if(htable->table[pos].info = Legitimate && htable->table[pos].data == key)
-//        return true;
-//    return false;
     for(int i = 0; i < htable->capacity; i++){
         if(htable->table[i].info == Legitimate && htable->table[i].data == key)
             return true;
