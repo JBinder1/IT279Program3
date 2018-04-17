@@ -135,6 +135,8 @@ HashTable * Rehash(HashTable * htable){
         if(table[i].info == Legitimate)
             Insert(table[i].data);
     }
+    free(table);
+    return htable;
     cout<<"Rehash finished. New table cap: "<<htable->capacity<<endl;
 }
 
